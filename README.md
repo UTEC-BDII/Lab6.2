@@ -4,7 +4,7 @@
 * Luis Carbajal
 * José Sanchez
 
-Este proyecto fue trabajado colaborativamente usando la herramienta de Live Share en Visual Studio Code.
+Este laboratorio fue trabajado colaborativamente usando la herramienta de Live Share en Visual Studio Code.
 
 ## Pasos para ejecución (en Windows)
 Clonar el repositorio localmente:
