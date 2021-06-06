@@ -2,6 +2,7 @@ import os
 import codecs
 import nltk
 from nltk.stem.snowball import SnowballStemmer
+from nltk.util import tokenwrap
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -44,6 +45,7 @@ def readDocuments():
             cont += 1
     return docs
 
+# Clase del indice invertido
 class InvertedIndex:
     filename = ""
     index = {}
@@ -74,7 +76,7 @@ class InvertedIndex:
                 if token[0] in docs[doc]:
                     docIDs.append(doc)
             self.index[token[0]] = [token[1], docIDs]
-
+            
         self.write()
 
     def write(self):
@@ -87,6 +89,8 @@ class InvertedIndex:
         f.close()
 
     def L(self, token):
+        if isinstance(token, list):
+            return token
         stemmer = SnowballStemmer('spanish')
         newToken = stemmer.stem(token)
         if newToken in self.index:
@@ -161,6 +165,26 @@ class InvertedIndex:
                     p2 += 1
         return res
         
-
+# Prueba
 index = InvertedIndex("index.txt")
-print(index.AND_NOT("frodo", "gandalf"))
+
+print("\nCondulta 1:")
+print("-----------")
+print("Gandalf:", index.L("Gandalf"))
+print("Frodo:", index.L("Frodo"))
+print("Gondor:", index.L("Gondor"))
+print("(Gandalf AND Frodo) AND NOT Gondor: ", index.AND_NOT(index.AND("Gandalf", "Frodo"), "Gondor"))
+
+print("\nCondulta 2:")
+print("-----------")
+print("Orthanc:", index.L("Orthanc"))
+print("Anillo:", index.L("Anillo"))
+print("Nazgûl:", index.L("Nazgûl"))
+print("Orthanc OR (Anillo AND NOT Nazgûl): ", index.OR("Orthanc", index.AND_NOT("Anillo", "Nazgûl")))
+
+print("\nCondulta 3:")
+print("-----------")
+print("Merry:", index.L("Merry"))
+print("Hobbit:", index.L("Hobbit"))
+print("Gimli:", index.L("Gimli"))
+print("(Merry AND Hobbit) OR Gimli: ", index.OR(index.AND("Merry", "Hobbit"), "Gimli"))
